@@ -1,0 +1,3 @@
+C:/Users/sebaa/CLionProjects/vole_machine/cmake-build-debug/CMakeFiles/vole_machine.dir
+C:/Users/sebaa/CLionProjects/vole_machine/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/sebaa/CLionProjects/vole_machine/cmake-build-debug/CMakeFiles/rebuild_cache.dir
