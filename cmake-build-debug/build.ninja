@@ -55,6 +55,12 @@ build CMakeFiles/vole_machine.dir/main.cpp.obj: CXX_COMPILER__vole_machine_unsca
   OBJECT_DIR = CMakeFiles\vole_machine.dir
   OBJECT_FILE_DIR = CMakeFiles\vole_machine.dir
 
+build CMakeFiles/vole_machine.dir/cpu_simulator.cpp.obj: CXX_COMPILER__vole_machine_unscanned_Debug C$:/Users/sebaa/CLionProjects/vole_machine/cpu_simulator.cpp || cmake_object_order_depends_target_vole_machine
+  DEP_FILE = CMakeFiles\vole_machine.dir\cpu_simulator.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\vole_machine.dir
+  OBJECT_FILE_DIR = CMakeFiles\vole_machine.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target vole_machine
@@ -63,7 +69,7 @@ build CMakeFiles/vole_machine.dir/main.cpp.obj: CXX_COMPILER__vole_machine_unsca
 #############################################
 # Link the executable vole_machine.exe
 
-build vole_machine.exe: CXX_EXECUTABLE_LINKER__vole_machine_Debug CMakeFiles/vole_machine.dir/main.cpp.obj
+build vole_machine.exe: CXX_EXECUTABLE_LINKER__vole_machine_Debug CMakeFiles/vole_machine.dir/main.cpp.obj CMakeFiles/vole_machine.dir/cpu_simulator.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\vole_machine.dir
