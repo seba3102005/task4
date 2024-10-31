@@ -168,16 +168,17 @@ public:
         std::bitset<32> binary(ans);
         string s = binary.to_string().substr(32 - num_bits);
 
-        int exponent = 127 + (s.size() - 1);
-        bitset<8> exp(exponent);
+        int exponent = 4 + (s.size() - 1);
+        bitset<3> exp(exponent);
         string fin_exp = exp.to_string();
 
-        string mantessa = "00000000000000000000000";
+        string mantessa = "0000";
         string part = s.substr(1);
         string total_mantessa = part + mantessa;
         total_mantessa = total_mantessa.substr(0, 23);
 
         string total = '0' + fin_exp + total_mantessa;
+        cerr<<total<<endl;
 
         unsigned long long decimalValue = std::stoull(total, nullptr, 2);
         std::ostringstream hexStream;

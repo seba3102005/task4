@@ -3,4 +3,4 @@ project(vole_machine)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(vole_machine main.cpp)
+add_executable(vole_machine main.cpp instructions.txt vole_machine.cpp vole_machine.h)
