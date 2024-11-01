@@ -18,8 +18,8 @@ Registers::Registers(int count) : reg(count, 0) {
     reg[6] = 0x06; // R6 initialized to 6
     reg[7] = 0x07; // R7 initialized to zero
     reg[8] = 0x08; // R8 initialized to zero
-    reg[9] = 0xA3; // R9 initialized to 80 (hex)
-    reg[10] = 10.0; // RA initialized to A0
+    reg[9] = 0x09; // R9 initialized to 80 (hex)
+    reg[10] = 0xA0; // RA initialized to A0
     reg[11] = 0xB0; // RB initialized to B0
     reg[12] = 0xC0; // RC initialized to C0
     reg[13] = 0xD0; // RD initialized to D0
@@ -148,39 +148,71 @@ int alu::add_twos_complement(Registers &registers, int R, int S, int T) {
     return decimalValue;
 }
 
-void alu::add_floating_point(Registers &registers, int R, char X, char Y) {
-    int ans1 = registers.get(hex_dec(X));
-    int ans2 = registers.get(hex_dec(Y));
-    int ans = ans1 + ans2;
-    int num_bits = std::log2(ans) + 1;
+string alu::intToBinary(int num) {
+    // Convert integer to binary
+    string binary = "";
+    if (num == 0) {
+        binary = "0";
+    } else {
+        while (num > 0) {
+            binary = to_string(num % 2) + binary;
+            num /= 2;
+        }
+    }
+    return binary;
+}
 
-    std::bitset<32> binary(ans);
-    string s = binary.to_string().substr(32 - num_bits);
 
-    int exponent = 4 + (s.size() - 1);
-    bitset<3> exp(exponent);
-    string fin_exp = exp.to_string();
+int alu::floatToBinary(Registers registers,int  R,char X,char Y) {
+    float num = hex_dec(X)+ hex_dec(Y);
+    // Separate integer and fractional parts
+    int integerPart = static_cast<int>(num);
 
-    string mantessa = "0000";
-    string part = s.substr(1);
-    string total_mantessa = part + mantessa;
-    total_mantessa = total_mantessa.substr(0, 23);
 
-    string total = '0' + fin_exp + total_mantessa;
-    cerr << total << endl;
-
-    unsigned long long decimalValue = std::stoull(total, nullptr, 2);
-    std::ostringstream hexStream;
-    hexStream << std::hex << decimalValue;
-    std::string hexString = hexStream.str();
-
-    for (auto &c : hexString) {
-        c = toupper(c);
+    // Convert integer part to binary
+    string integerBinary = "";
+    if (integerPart == 0) {
+        integerBinary = "0";
+    } else {
+        while (integerPart > 0) {
+            integerBinary = to_string(integerPart % 2) + integerBinary;
+            integerPart /= 2;
+        }
     }
 
-    int fin_ans = stoi(hexString, nullptr, 16);
-    registers.set(R, fin_ans);
+    // Convert fractional part to binary
+
+
+    // Combine integer and fractional parts
+    string finalBinary = integerBinary ;
+
+    // Calculate exponent part
+    int index = integerBinary.size() - 1;
+    int e = index + 8; // example bias of 8 for a 4-bit exponent representation
+    string exponentBinary = intToBinary(e);
+
+    // Calculate mantissa part
+    string mantissa;
+    for (int i = 1; i < finalBinary.size(); i++) {
+        if (finalBinary[i] != '.') {
+            mantissa += finalBinary[i];
+        }
+    }
+
+
+    string answer=exponentBinary+mantissa;
+    unsigned long long fin_ans = bitset<64>(answer).to_ullong();
+    std::ostringstream hexStream;
+    hexStream << std::hex << uppercase << fin_ans;
+    std::string hexString = hexStream.str();
+
+    int fin_ans2 = stoi(hexString, nullptr, 16);
+
+
+    return fin_ans2;
 }
+
+
 
 void alu::bitwise_or(Registers &registers, int R, int S, int T) {
     int value_s = registers.get(S);

@@ -11,7 +11,7 @@
 
 #include <vector>
 #include <string>
-
+using namespace std;
 class Registers {
 private:
     std::vector<int> reg;
@@ -47,7 +47,8 @@ class alu {
 public:
     int hex_dec(char destReg);
     int add_twos_complement(Registers &registers, int R, int S, int T);
-    void add_floating_point(Registers &registers, int R, char X, char Y);
+    int floatToBinary(Registers registers,int  R,char X,char Y);
+    string intToBinary(int num);
     void bitwise_or(Registers &registers, int R, int S, int T);
     void bitwise_and(Registers &registers, int R, int S, int T);
     void bitwise_xor(Registers &registers, int R, int S, int T);

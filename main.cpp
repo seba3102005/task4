@@ -21,6 +21,7 @@ void execute_instruction(const string &instruction, Registers &registers, Memory
     X = instruction[2];
     Y = instruction[3];
 
+
     cu cu2;
     alu alu2;
 
@@ -56,8 +57,14 @@ void execute_instruction(const string &instruction, Registers &registers, Memory
             break;
         }
         case '6':
-            alu2.add_floating_point(registers, R, X, Y);
+        {
+
+            int value=alu2.floatToBinary(registers, R, X, Y) ;
+            registers.set(R, value);
             break;
+
+        }
+
         case '7': {
             int S = alu2.hex_dec(instruction[2]);
             int T = alu2.hex_dec(instruction[3]);
@@ -130,3 +137,13 @@ int main() {
 
     return 0;
 }
+
+
+
+//
+//int main() {
+//    float num;
+//    cout << "Enter a floating point number: ";
+//
+//    return 0;
+//}
