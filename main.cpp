@@ -88,7 +88,7 @@ void execute_instruction(const string &instruction, Registers &registers, Memory
         }
         case 'B':
         {
-            cu2.jump_if_equal(registers, program_counter, R, XY,memory);
+            cu2.jump_if_equal(registers,program_counter, R, XY,memory);
             break;
         }
         case 'C':
