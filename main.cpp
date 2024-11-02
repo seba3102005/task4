@@ -67,18 +67,38 @@ void execute_instruction(const string &instruction, Registers &registers, Memory
 
         }
 
+
+        case '7': {
+            int S = alu2.hex_dec(instruction[2]);
+            int T = alu2.hex_dec(instruction[3]);
+            alu2.bitwise_or(registers, R, S, T);
+            break;
+        }
+        case '8': {
+            int S = alu2.hex_dec(instruction[2]);
+            int T = alu2.hex_dec(instruction[3]);
+            alu2.bitwise_and(registers, R, S, T);
+            break;
+        }
+        case '9': {
+            int S = alu2.hex_dec(instruction[2]);
+            int T = alu2.hex_dec(instruction[3]);
+            alu2.bitwise_xor(registers, R, S, T);
+            break;
+        }
         case 'B':
         {
             cu2.jump_if_equal(registers, program_counter, R, XY,memory);
             break;
         }
-
         case 'C':
             cu2.halt();
             break;
         case 'D':
             cu2.jump_if_greater(registers, program_counter, R, XY);
             break;
+
+
         default:
             cout << "Unknown instruction: " << instruction << endl;
     }
