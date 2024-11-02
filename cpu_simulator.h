@@ -38,7 +38,7 @@ public:
     void load_immediate(Registers &registers, int R, int XY);
     void store_in_memory(Registers &registers, Memory &memory, int R, int XY);
     void move(Registers &registers, int destReg, int srcReg);
-    void jump_if_equal(Registers &registers, int &program_counter, int R, int XY);
+    void jump_if_equal(Registers &registers, int &program_counter, int R, int XY,Memory memory);
     void jump_if_greater(Registers &registers, int &program_counter, int R, int XY);
     void halt();
 };

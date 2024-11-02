@@ -9,22 +9,22 @@ using namespace std;
 
 // Registers Implementation
 Registers::Registers(int count) : reg(count, 0) {
-    reg[0] = 0x00; // R0 initialized to zero
-    reg[1] = 0x01; // R1 initialized to 1
-    reg[2] = 0x02; // R2 initialized to 2
-    reg[3] = 0x03; // R3 initialized to 3
-    reg[4] = 0x04; // R4 initialized to 4
-    reg[5] = 0x05; // R5 initialized to 5
-    reg[6] = 0x06; // R6 initialized to 6
-    reg[7] = 0x07; // R7 initialized to zero
-    reg[8] = 0x08; // R8 initialized to zero
-    reg[9] = 0x09; // R9 initialized to 80 (hex)
-    reg[10] = 0xA0; // RA initialized to A0
-    reg[11] = 0xB0; // RB initialized to B0
-    reg[12] = 0xC0; // RC initialized to C0
-    reg[13] = 0xD0; // RD initialized to D0
-    reg[14] = 0xE0; // RE initialized to E0
-    reg[15] = 0xF0; // RF initialized to F0
+    reg[0] = 0x00;
+    reg[1] = 0x01;
+    reg[2] = 0x02;
+    reg[3] = 0x03;
+    reg[4] = 0x04;
+    reg[5] = 0x05;
+    reg[6] = 0x06;
+    reg[7] = 0x07;
+    reg[8] = 0x08;
+    reg[9] = 0x09;
+    reg[10] = 0xA0;
+    reg[11] = 0xB0;
+    reg[12] = 0xC0;
+    reg[13] = 0xD0;
+    reg[14] = 0xE0;
+    reg[15] = 0xF0;
 }
 
 int Registers::get(int index) const {
@@ -51,12 +51,14 @@ void Registers::print() const {
 // Memory Implementation
 Memory::Memory(int size) : memory(size, 0) {}
 
+
 int Memory::get(int address) const {
     return memory[address];
 }
 
 void Memory::set(int address, int value) {
     memory[address] = value;
+
 }
 
 void Memory::print() const {
@@ -88,10 +90,25 @@ void cu::move(Registers &registers, int destReg, int srcReg) {
     registers.set(destReg, value);
 }
 
-void cu::jump_if_equal(Registers &registers, int &program_counter, int R, int XY) {
-    if (registers.get(R) == registers.get(0)) {
-        program_counter = XY - 1;
+void cu::jump_if_equal(Registers &registers, int &program_counter, int R, int XY,Memory memory) {
+
+    if (registers.get(R) == registers.get(0))
+    {
+
+        program_counter = XY ;
+        string s1 = to_string(memory.get(program_counter));
+        string s2 = to_string(memory.get(program_counter+1));
+        string s = s1+s2;
+        if(s=="00")
+        {
+            return;
+        }
+
+        execute_instruction(s,registers,memory,program_counter);
+
     }
+
+
 }
 
 void cu::jump_if_greater(Registers &registers, int &program_counter, int R, int XY) {

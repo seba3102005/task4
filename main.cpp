@@ -8,7 +8,9 @@ using namespace std;
 
 int program_counter = 0;
 
+
 void execute_instruction(const string &instruction, Registers &registers, Memory &memory, int &program_counter) {
+
     cout << "Before Execution:\n";
     registers.print();
     memory.print();
@@ -65,27 +67,12 @@ void execute_instruction(const string &instruction, Registers &registers, Memory
 
         }
 
-        case '7': {
-            int S = alu2.hex_dec(instruction[2]);
-            int T = alu2.hex_dec(instruction[3]);
-            alu2.bitwise_or(registers, R, S, T);
-            break;
-        }
-        case '8': {
-            int S = alu2.hex_dec(instruction[2]);
-            int T = alu2.hex_dec(instruction[3]);
-            alu2.bitwise_and(registers, R, S, T);
-            break;
-        }
-        case '9': {
-            int S = alu2.hex_dec(instruction[2]);
-            int T = alu2.hex_dec(instruction[3]);
-            alu2.bitwise_xor(registers, R, S, T);
-            break;
-        }
         case 'B':
-            cu2.jump_if_equal(registers, program_counter, R, XY);
+        {
+            cu2.jump_if_equal(registers, program_counter, R, XY,memory);
             break;
+        }
+
         case 'C':
             cu2.halt();
             break;
@@ -96,9 +83,11 @@ void execute_instruction(const string &instruction, Registers &registers, Memory
             cout << "Unknown instruction: " << instruction << endl;
     }
 
+
     cout << "After Execution:\n";
     registers.print();
     memory.print();
+
 }
 
 int main() {
@@ -132,6 +121,7 @@ int main() {
              << " (PC: " << program_counter << ")" << endl;
 
         execute_instruction(instructions[program_counter], registers, memory, program_counter);
+
         program_counter++;
     }
 
