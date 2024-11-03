@@ -64,7 +64,11 @@ void Memory::set(int address, int value) {
 void Memory::print() const {
     cout << "\nMemory: " << endl;
     for (int i = 0; i < memory.size(); ++i) {
-        if (i % 16 == 0) cout << "\n" << hex << setw(2) << setfill('0') << i << ": ";
+        if (i % 2 == 0)
+        {
+            cout<< "\n" << hex << setw(2) << setfill('0') << i << ": ";
+        }
+
         cout << setw(2) << setfill('0') << memory[i] << " ";
     }
     cout << "\n----------------------------\n";
@@ -119,7 +123,7 @@ void cu::jump_if_greater(Registers &registers, int &program_counter, int R, int 
 
 void cu::halt() {
     cout << "Program halted." << endl;
-    exit(0);
+
 }
 
 // ALU Implementation

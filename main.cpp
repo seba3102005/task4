@@ -8,11 +8,7 @@ using namespace std;
 
 int program_counter = 0;
 
-
 void execute_instruction(const string &instruction, Registers &registers, Memory &memory, int &program_counter) {
-
-
-
     char op_code = instruction[0];
     int R, XY, R2;
     char X, Y;
@@ -20,7 +16,6 @@ void execute_instruction(const string &instruction, Registers &registers, Memory
     XY = stoi(instruction.substr(2, 2), nullptr, 16);
     X = instruction[2];
     Y = instruction[3];
-
 
     cu cu2;
     alu alu2;
@@ -56,16 +51,11 @@ void execute_instruction(const string &instruction, Registers &registers, Memory
             registers.set(R2, value);
             break;
         }
-        case '6':
-        {
-
-            int value=alu2.floatToBinary(registers, R, X, Y) ;
+        case '6': {
+            int value = alu2.floatToBinary(registers, R, X, Y);
             registers.set(R, value);
             break;
-
         }
-
-
         case '7': {
             int S = alu2.hex_dec(instruction[2]);
             int T = alu2.hex_dec(instruction[3]);
@@ -85,73 +75,54 @@ void execute_instruction(const string &instruction, Registers &registers, Memory
             break;
         }
         case 'B':
-        {
-            cu2.jump_if_equal(registers,program_counter, R, XY,memory);
+            cu2.jump_if_equal(registers, program_counter, R, XY, memory);
             break;
-        }
         case 'C':
             cu2.halt();
             break;
         case 'D':
             cu2.jump_if_greater(registers, program_counter, R, XY);
             break;
-
-
         default:
             cout << "Unknown instruction: " << instruction << endl;
     }
-
-
-    cout<<"executed"<<endl;
-
 }
 
+
 int main() {
+    Registers registers(16);
+    Memory memory(256);
+    vector<string> instructions;
+    bool instructionsLoaded = false;
 
-    while(true)
-    {
-        Registers registers(16);
-        Memory memory(256);
-        vector<string> instructions;
+    while (true) {
+        bool flag=false;
+        cout << "\n--- CPU Simulator Menu ---\n";
+        cout << "1. Load instructions from file\n";
+        cout << "2. Execute program\n";
+        cout << "3. Display registers and memory\n";
+        cout << "4. Exit\n";
+        cout << "Choose an option: ";
+        int choice;
+        cin >> choice;
 
-        cout<<"1)Load the instruction\n2)Execute the instruction\n3)display the status\n4)Exit the program"<<endl;
-        string choice;
-        cin>>choice;
-        while(choice!="1" && choice!="2" && choice!="3" && choice!="4")
-        {
-            cout<<"invalid choice ,please enter a valid choice\n";
-            cin>>choice;
+        if (choice == 1) {
+            cout << "Enter the filename of instructions: ";
+            string filename;
+            cin >> filename;
+            ifstream file(filename);
 
-        }
-
-        ifstream file1;
-        if(choice=="1")
-        {
-            string file_name;
-            cout<<"enter the file's name without any extensions"<<endl;
-
-            cin>>file_name;
-            file_name = file_name.append(".txt");
-            cerr<<file_name<<endl;
-            file_name.append(".txt");
-            while (file1.is_open())
-            {
-
+            if (!file) {
                 cerr << "Error opening file." << endl;
-                cout<<"please enter an existing file name"<<endl;
-                cin>>file_name;
-                file_name.append(".txt");
-                file1.open(file_name);
-
+                continue;
             }
-        }
-        else if(choice =="2")
-        {
-            string instruction;
-            int instruction_address = 0;
 
-            while (file1 >> instruction)
-            {
+            instructions.clear();
+            program_counter = 0;
+            int instruction_address = 0;
+            string instruction;
+
+            while (file >> instruction) {
                 string h = instruction.substr(0, instruction.length() / 2);
                 string h2 = instruction.substr(instruction.length() / 2);
                 int first_value = stoi(h, nullptr, 16);
@@ -161,35 +132,46 @@ int main() {
                 instructions.push_back(instruction);
                 instruction_address += 2;
             }
-           file1.close();
-
+            file.close();
+            instructionsLoaded = true;
+            cout << "Instructions loaded successfully.\n";
+        }
+        else if (choice == 2) {
+            if (!instructionsLoaded) {
+                cout << "Please load instructions first.\n";
+                continue;
+            }
             while (program_counter < instructions.size()) {
-                cout << "Executing instruction: " << instructions[program_counter]
-                     << " (PC: " << program_counter << ")" << endl;
 
-                execute_instruction(instructions[program_counter], registers, memory, program_counter);
+                if(!flag)
+                {
+                    cout << "Executing instruction: " << instructions[program_counter]
+                      << " (PC: " << program_counter << ")" << endl;
+                    execute_instruction(instructions[program_counter], registers, memory, program_counter);
+                }
 
+
+                if(instructions[program_counter][0]=='C')
+                {
+                    flag=true;
+                }
                 program_counter++;
             }
-
+            cout << "Program executed successfully.\n";
         }
-        else if(choice=="3")
-        {
-            cout<<"After Execution1"<<endl;
+        else if (choice == 3) {
+            cout << "\n--- Registers ---\n";
             registers.print();
+            cout << "\n--- Memory ---\n";
             memory.print();
         }
-        else if(choice =="4")
-        {
-            cout<<"Exitting the program"<<endl;
+        else if (choice == 4) {
+            cout << "Exiting program.\n";
             break;
         }
-
-
-
-
-
-
+        else {
+            cout << "Invalid choice. Please select a valid option.\n";
+        }
     }
 
     return 0;
