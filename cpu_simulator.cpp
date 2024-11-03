@@ -40,7 +40,7 @@ void Registers::set(int index, int value) {
     }
 }
 
-void Registers::print() const {
+void Registers::print()  const{
     cout << "\nRegisters:" << endl;
     for (int i = 0; i < reg.size(); ++i) {
         cout << "R" << hex << i << ": " << setw(2) << setfill('0') << hex << uppercase << reg[i] << endl;
