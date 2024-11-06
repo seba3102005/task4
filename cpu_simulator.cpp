@@ -4,27 +4,49 @@
 #include <bitset>
 #include <cmath>
 #include <sstream>
+#include <regex>
 
 using namespace std;
 
+bool is_valid_instruction(const string& instruction) {
+    const regex load_store("^[123][0-9A-F][0-9A-F]{2}$");  // Instructions 1,2,3
+    const regex move("^4[0-9A-F][0-9A-F][0-9A-F]$");       // Instruction 4
+    const regex arithmetic("^5[0-9A-F][0-9][0-9]$");       // Instruction 5
+    const regex floating("^6[0-9A-F][0-9A-F][0-9A-F]$");   // Instruction 6
+    const regex bitwise("^[789][0-9A-F][0-9A-F][0-9A-F]$"); // Instructions 7,8,9
+    const regex rotate("^A[0-9A-F][0-9A-F][0-9A-F]$");     // Instruction A
+    const regex jump("^B[0-9A-F][0-9A-F]{2}$");           // Instruction B
+    const regex halt("^C000$");                            // Instruction C
+    const regex jump_greater("^D[0-9A-F][0-9A-F]{2}$");   // Instruction D
+
+    return regex_match(instruction, load_store) ||
+           regex_match(instruction, move) ||
+           regex_match(instruction, arithmetic) ||
+           regex_match(instruction, floating) ||
+           regex_match(instruction, bitwise) ||
+           regex_match(instruction, rotate) ||
+           regex_match(instruction, jump) ||
+           regex_match(instruction, halt) ||
+           regex_match(instruction, jump_greater);
+}
 // Registers Implementation
 Registers::Registers(int count) : reg(count, 0) {
     reg[0] = 0x00;
-    reg[1] = 0x01;
-    reg[2] = 0x02;
-    reg[3] = 0x03;
-    reg[4] = 0x04;
-    reg[5] = 0x05;
-    reg[6] = 0x06;
-    reg[7] = 0x07;
-    reg[8] = 0x08;
-    reg[9] = 0x09;
-    reg[10] = 0xA0;
-    reg[11] = 0xB0;
-    reg[12] = 0xC0;
-    reg[13] = 0xD0;
-    reg[14] = 0xE0;
-    reg[15] = 0xF0;
+    reg[1] = 0x00;
+    reg[2] = 0x00;
+    reg[3] = 0x00;
+    reg[4] = 0x00;
+    reg[5] = 0x00;
+    reg[6] = 0x00;
+    reg[7] = 0x00;
+    reg[8] = 0x00;
+    reg[9] = 0x00;
+    reg[10] = 0x00;
+    reg[11] = 0x00;
+    reg[12] = 0x00;
+    reg[13] = 0x00;
+    reg[14] = 0x00;
+    reg[15] = 0x00;
 }
 
 int Registers::get(int index) const {
@@ -255,3 +277,11 @@ void alu::bitwise_xor(Registers &registers, int R, int S, int T) {
     int result = value_s ^ value_t;
     registers.set(R, result);
 }
+void alu::binary_rotation(Registers &registers, int R, int X) {
+    int value_r = registers.get(R);
+    int value_x = registers.get(X);
+    value_r &= 0xFF;
+    int result = ((value_r >> value_x) | (value_r << (8 - value_x))) & 0xFF;
+    registers.set(R, result);
+}
+

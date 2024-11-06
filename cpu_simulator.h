@@ -12,6 +12,7 @@
 #include <vector>
 #include <string>
 using namespace std;
+bool is_valid_instruction(const string& instruction);
 class Registers {
 private:
     std::vector<int> reg;
@@ -52,6 +53,7 @@ public:
     void bitwise_or(Registers &registers, int R, int S, int T);
     void bitwise_and(Registers &registers, int R, int S, int T);
     void bitwise_xor(Registers &registers, int R, int S, int T);
+    void binary_rotation(Registers &registers, int R, int X);
 };
 
 void execute_instruction(const std::string &instruction, Registers &registers, Memory &memory, int &program_counter);

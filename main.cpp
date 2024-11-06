@@ -3,6 +3,10 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <limits>
+#include <regex>
+
+
 
 using namespace std;
 
@@ -74,6 +78,12 @@ void execute_instruction(const string &instruction, Registers &registers, Memory
             alu2.bitwise_xor(registers, R, S, T);
             break;
         }
+        case 'A': {
+            int R = alu2.hex_dec(instruction[1]);
+            int X = alu2.hex_dec(instruction[3]);
+            alu2.binary_rotation(registers, R, X);
+            break;
+        }
         case 'B':
             cu2.jump_if_equal(registers, program_counter, R, XY, memory);
             break;
@@ -103,13 +113,14 @@ int main() {
         cout << "3. Display registers and memory\n";
         cout << "4. Exit\n";
         cout << "Choose an option: ";
-        int choice;
-        cin >> choice;
+        char choice;
+        cin.get(choice);
 
-        if (choice == 1) {
+        if (choice == '1') {
             cout << "Enter the filename of instructions: ";
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             string filename;
-            cin >> filename;
+            getline(cin,filename);
             ifstream file(filename);
 
             if (!file) {
@@ -123,6 +134,10 @@ int main() {
             string instruction;
 
             while (file >> instruction) {
+                if (!is_valid_instruction(instruction)) {
+                    cout << "Skipping invalid instruction at address " << instruction_address << ": " << instruction << endl;
+                    continue;
+                }
                 string h = instruction.substr(0, instruction.length() / 2);
                 string h2 = instruction.substr(instruction.length() / 2);
                 int first_value = stoi(h, nullptr, 16);
@@ -136,7 +151,8 @@ int main() {
             instructionsLoaded = true;
             cout << "Instructions loaded successfully.\n";
         }
-        else if (choice == 2) {
+        else if (choice == '2') {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             if (!instructionsLoaded) {
                 cout << "Please load instructions first.\n";
                 continue;
@@ -159,18 +175,21 @@ int main() {
             }
             cout << "Program executed successfully.\n";
         }
-        else if (choice == 3) {
+        else if (choice == '3') {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cout << "\n--- Registers ---\n";
             registers.print();
             cout << "\n--- Memory ---\n";
             memory.print();
         }
-        else if (choice == 4) {
+        else if (choice == '4') {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cout << "Exiting program.\n";
             break;
         }
         else {
             cout << "Invalid choice. Please select a valid option.\n";
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
     }
 
